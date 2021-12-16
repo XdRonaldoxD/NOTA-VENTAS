@@ -3,7 +3,8 @@ import Swal from 'sweetalert2';
 import { unidad_interface, tipo_concentracion_interface } from '../../interfaces/unidad';
 import { LoginService } from '../../services/login/login.service';
 import { PresentacionService } from '../../services/presentacion/presentacion.service';
-declare var $:any;
+import { finalize } from 'rxjs/operators';
+declare var $: any;
 @Component({
   selector: 'app-presentacion',
   templateUrl: './presentacion.component.html',
@@ -14,26 +15,26 @@ export class PresentacionComponent implements OnInit {
   numrows2: any;
   paginas: any;
   paginas2: any;
-  filtrarTabla: any='';
-  filtrarTabla2: any='';
+  filtrarTabla: any = '';
+  filtrarTabla2: any = '';
   pageActual: number = 1;
   pageActual2: number = 1;
   token: any;
   identity: any;
-  listarPresentacion: any=[];
-  listarDesactivadosPresentacion: any=[];
-  listarConcentracion:any=[];
-  unidad:unidad_interface={};
-  tipo_concentracion:tipo_concentracion_interface={};
-  cargando:boolean;
-  cargando2:boolean;
-  validar:boolean=false;
-  validarConcentracion:boolean=false;
+  listarPresentacion: any = [];
+  listarDesactivadosPresentacion: any = [];
+  listarConcentracion: any = [];
+  unidad: unidad_interface = {};
+  tipo_concentracion: tipo_concentracion_interface = {};
+  cargando: boolean;
+  cargando2: boolean;
+  validar: boolean = false;
+  validarConcentracion: boolean = false;
   dtOptions: DataTables.Settings = {};
   constructor(
     private _PresentacionServicio: PresentacionService,
     private _loginServicio: LoginService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = this._loginServicio.getToken();
@@ -50,9 +51,9 @@ export class PresentacionComponent implements OnInit {
       pageLength: 5,
       destroy: true,
       responsive: true,
-      order:false
+      order: false
     };
-    
+
     this.listarpresentacionDesactivados();
     this.dtOptions[1] = {
       pagingType: 'full_numbers',
@@ -66,37 +67,37 @@ export class PresentacionComponent implements OnInit {
       pageLength: 5,
       destroy: true,
       responsive: true,
-      order:false
+      order: false
     };
-    
+
   }
-  busqueda(evento){
+  busqueda(evento) {
     // console.log(evento);
   }
   cambio(evento) {
     this.numrows = evento;
 
   }
- cambio2(evento) {
+  cambio2(evento) {
     this.numrows2 = evento;
 
   }
-  
+
   listarPresentaciones() {
-    this.cargando=true;
+    this.cargando = true;
     this._PresentacionServicio.TraerPresenteacion(this.token).subscribe((respuesta) => {
       this.listarPresentacion = respuesta;
-      this.cargando=false;
+      this.cargando = false;
     });
- 
+
   }
   listarpresentacionDesactivados() {
-    this.cargando2=true;
+    this.cargando2 = true;
     this._PresentacionServicio.TraerPresenteacionDesactivados(this.token).subscribe((respuesta) => {
       this.listarDesactivadosPresentacion = respuesta;
-      this.cargando2=false;
+      this.cargando2 = false;
     });
- 
+
   }
   limpiar() {
     this.paginas = 5;
@@ -106,12 +107,12 @@ export class PresentacionComponent implements OnInit {
     this.paginas2 = 5;
     this.numrows2 = this.paginas2;
   }
-  EnviarDatosUnidad(DatosUnidad){
+  EnviarDatosUnidad(DatosUnidad) {
     if (DatosUnidad.valid) {
-      this._PresentacionServicio.GuardarUnidad(this.token,this.unidad).subscribe(respuesta=>{
-        if (respuesta=="Creado") {
+      this._PresentacionServicio.GuardarUnidad(this.token, this.unidad).subscribe(respuesta => {
+        if (respuesta == "Creado") {
           Swal.fire({
-            toast:true,
+            toast: true,
             position: 'top',
             icon: 'success',
             title: `Se Registro correctamente la Presentacion.`,
@@ -119,9 +120,9 @@ export class PresentacionComponent implements OnInit {
             timerProgressBar: true,
             timer: 3000
           })
-        }else{
+        } else {
           Swal.fire({
-            toast:true,
+            toast: true,
             position: 'top',
             icon: 'success',
             title: `Se Edito correctamente la Presentacion.`,
@@ -133,13 +134,13 @@ export class PresentacionComponent implements OnInit {
         this.listarPresentaciones();
         this.listarpresentacionDesactivados();
       })
-      this.unidad={};
-      this.validar=false;
+      this.unidad = {};
+      this.validar = false;
       $('#modal_marca').modal('hide');
-    }else{
-      this.validar=true;
+    } else {
+      this.validar = true;
       Swal.fire({
-        toast:true,
+        toast: true,
         position: 'top',
         icon: 'error',
         title: `Debe llenar el campo requerido.`,
@@ -149,36 +150,37 @@ export class PresentacionComponent implements OnInit {
       })
     }
   }
-  AgregarMarca(){
+  AgregarMarca() {
     $(".titulo_presentacion").html('Nueva Presentación');
     $('#modal_marca').modal('show');
   }
-  EditaPresentacion(id_unidad){
-    this._PresentacionServicio.TraerUnidadSeleccionado(this.token,id_unidad).subscribe(respuesta=>{
-      this.unidad=respuesta;
+  EditaPresentacion(id_unidad) {
+    this._PresentacionServicio.TraerUnidadSeleccionado(this.token, id_unidad).subscribe(respuesta => {
+      this.unidad = respuesta;
     })
     $(".titulo_presentacion").html('Editar Presentación');
     $('#modal_marca').modal('show');
   }
-  AsignarConcentracion(id_unidad,glosa_presentacion){
-    this.tipo_concentracion.id_unidad=id_unidad;
+  AsignarConcentracion(id_unidad, glosa_presentacion) {
+    this.tipo_concentracion.id_unidad = id_unidad;
     $("#presentacion").html(glosa_presentacion);
     this.listarConcentraciones(id_unidad);
     $('#detallePresentacion').modal('show');
 
   }
-  listarConcentraciones(id_unidad){
-    this._PresentacionServicio.TraerTipoConcentracion(this.token,id_unidad).subscribe(respuesta=>{
-      this.listarConcentracion=respuesta;
-      console.log(this.listarConcentracion);
+  listarConcentraciones(id_unidad) {
+    this._PresentacionServicio.TraerTipoConcentracion(this.token, id_unidad).subscribe(respuesta => {
+      this.listarConcentracion = respuesta;
     })
   }
-  EnviarDatosConcentracion(datos){
+  EnviarDatosConcentracion(datos) {
     if (datos.valid) {
-      this._PresentacionServicio.GuardarTipoConcentracion(this.token,this.tipo_concentracion).subscribe(respuesta=>{
-        if (respuesta=="Creado") {
+      this._PresentacionServicio.GuardarTipoConcentracion(this.token, this.tipo_concentracion).pipe(finalize(() => {
+        this.validarConcentracion = false;
+      })).subscribe(respuesta => {
+        if (respuesta == "Creado") {
           Swal.fire({
-            toast:true,
+            toast: true,
             position: 'top',
             icon: 'success',
             title: `Se Registro correctamente la concentración.`,
@@ -186,9 +188,9 @@ export class PresentacionComponent implements OnInit {
             timerProgressBar: true,
             timer: 3000
           })
-        }else{
+        } else {
           Swal.fire({
-            toast:true,
+            toast: true,
             position: 'top',
             icon: 'success',
             title: `Se Edito correctamente la concentración.`,
@@ -203,14 +205,14 @@ export class PresentacionComponent implements OnInit {
       $(".cancelar").addClass('d-none');
       setTimeout(() => {
         this.listarConcentraciones(this.tipo_concentracion.id_unidad);
-      }, 1000);
-   
-      this.validarConcentracion=false;
-      datos.reset();
-    }else{
-      this.validarConcentracion=true;
+        this.tipo_concentracion.id_tipo_concentracion = null;
+        datos.reset();
+      }, 500);
+      
+    } else {
+      this.validarConcentracion = true;
       Swal.fire({
-        toast:true,
+        toast: true,
         position: 'top',
         icon: 'error',
         title: `Debe llenar el campo requerido.`,
@@ -220,18 +222,18 @@ export class PresentacionComponent implements OnInit {
       })
     }
   }
-  EditarConcentracion(id_tipo_concentracion){
-    this._PresentacionServicio.TraeridConcentracion(this.token,id_tipo_concentracion).subscribe(respuesta=>{
-      this.tipo_concentracion=respuesta;
+  EditarConcentracion(id_tipo_concentracion) {
+    this._PresentacionServicio.TraeridConcentracion(this.token, id_tipo_concentracion).subscribe(respuesta => {
+      this.tipo_concentracion = respuesta;
       $("#btn-save").html('EDITAR CONCENTRACION');
       $(".cancelar").removeClass('d-none');
     })
   }
-  EliminarConcentracion(id_tipo_concentracion){
-    this._PresentacionServicio.EliminaridConcentracion(this.token,id_tipo_concentracion).subscribe(respuesta=>{
-      if (respuesta=="Eliminado") {
+  EliminarConcentracion(id_tipo_concentracion) {
+    this._PresentacionServicio.EliminaridConcentracion(this.token, id_tipo_concentracion).subscribe(respuesta => {
+      if (respuesta == "Eliminado") {
         Swal.fire({
-          toast:true,
+          toast: true,
           position: 'top',
           icon: 'success',
           title: `Se Elimino correctamente la concentración.`,
@@ -240,7 +242,7 @@ export class PresentacionComponent implements OnInit {
           timer: 3000
         })
         this.listarConcentraciones(this.tipo_concentracion.id_unidad);
-      }else{
+      } else {
         Swal.fire(
           'No se puede eliminar, ya esta asociado al producto',
           '',
@@ -248,19 +250,19 @@ export class PresentacionComponent implements OnInit {
         )
       }
     })
-    
+
   }
-  CancelarConcentracion(){
+  CancelarConcentracion() {
     $("#btn-save").html('AGREGAR CONCENTRACION');
     $(".cancelar").addClass('d-none');
-    this.tipo_concentracion.id_tipo_concentracion=null;
-    this.tipo_concentracion.glosa_tipo_concentracion=null;
-    this.tipo_concentracion.orden_tipo_concentracion=null;
-    this.tipo_concentracion.vigente_tipo_concentracion=null;
+    this.tipo_concentracion.id_tipo_concentracion = null;
+    this.tipo_concentracion.glosa_tipo_concentracion = null;
+    this.tipo_concentracion.orden_tipo_concentracion = null;
+    this.tipo_concentracion.vigente_tipo_concentracion = null;
     console.log(this.tipo_concentracion);
   }
- 
-  DesactivarPresentacion(id_unidad,glosa_unidad){
+
+  DesactivarPresentacion(id_unidad, glosa_unidad) {
     Swal.fire({
       title: `¿Esta seguro de desactivar la presentación ${glosa_unidad}?`,
       icon: 'warning',
@@ -270,23 +272,23 @@ export class PresentacionComponent implements OnInit {
       confirmButtonText: 'Si'
     }).then((result) => {
       if (result.value) {
-        this._PresentacionServicio.DesactivarPresentacion(this.token,id_unidad)
-        .subscribe(respuesta=>{
-          Swal.fire(
-            `Presentación ${respuesta}!`,
-            'Desactivado.',
-            'success'
-          )
-          this.listarPresentaciones();
-          this.listarpresentacionDesactivados();
-        });
-   
-        
+        this._PresentacionServicio.DesactivarPresentacion(this.token, id_unidad)
+          .subscribe(respuesta => {
+            Swal.fire(
+              `Presentación ${respuesta}!`,
+              'Desactivado.',
+              'success'
+            )
+            this.listarPresentaciones();
+            this.listarpresentacionDesactivados();
+          });
+
+
       }
     })
   }
 
-  ActivarPresentacion(id_presentacion,glosa_presentacion){
+  ActivarPresentacion(id_presentacion, glosa_presentacion) {
     Swal.fire({
       title: `¿Esta seguro de Activar la presentación ${glosa_presentacion}?`,
       icon: 'warning',
@@ -296,24 +298,24 @@ export class PresentacionComponent implements OnInit {
       confirmButtonText: 'Si'
     }).then((result) => {
       if (result.value) {
-        this._PresentacionServicio.ActivarPresentacion(this.token,id_presentacion)
-        .subscribe(respuesta=>{
-          Swal.fire(
-            `Presentación ${respuesta}!`,
-            'Activado.',
-            'success'
-          )
+        this._PresentacionServicio.ActivarPresentacion(this.token, id_presentacion)
+          .subscribe(respuesta => {
+            Swal.fire(
+              `Presentación ${respuesta}!`,
+              'Activado.',
+              'success'
+            )
             this.listarpresentacionDesactivados();
             this.listarPresentaciones();
-        });
+          });
 
-        
+
       }
     })
   }
 
-  cerrarModal(){
-    this.unidad={};
+  cerrarModal() {
+    this.unidad = {};
   }
 
 
