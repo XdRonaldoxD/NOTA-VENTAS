@@ -1,0 +1,63 @@
+	<!-- Main Wrapper -->
+    <div class="main-wrapper login-body">
+        <div class="login-wrapper">
+            <div class="container">
+                <div class="loginbox">
+                    <div class="login-left">
+                        <img class="img-fluid" src="assets/img/ahorro-farma.png" alt="Logo">
+                    </div>
+                    <div class="login-right">
+                        <div class="login-right-wrap">
+                            <h1>Registrarse</h1>
+                            <p class="account-subtitle">Acceso al Sistema</p>
+                            <!-- Form -->
+                            <form  #registraser="ngForm" (ngSubmit)="registarUsuario(registraser)">
+                                <div class="form-group">
+                                    <input class="form-control"  #nombre_usuario="ngModel"
+                                    type="text" name="nombre_usuario"
+                                    [ngClass]="{'is-valid': nombre_usuario.valid,'is-invalid': !nombre_usuario.valid && validar}"
+                                    [required]="true"
+                                     [(ngModel)]="register.nombre_usuario" 
+                                       placeholder="Nombre" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control"  #apellido_usuario="ngModel"
+                                    name="apellido_usuario" [(ngModel)]="register.apellido_usuario"
+                                    [ngClass]="{'is-valid': apellido_usuario.valid,'is-invalid': !apellido_usuario.valid && validar}"
+                                    [required]="true"
+                                     type="text" placeholder="Apellidos"  autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" #email="ngModel"  type="email" name="email" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}"
+                                     [ngClass]="{'is-valid': email.valid,'is-invalid': !email.valid && validar}"
+                                    [(ngModel)]="register.email_usuario"  autocomplete="off"
+                                     placeholder="Correo electronico" [required]="true">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control"  #password_usuario="ngModel"
+                                    [required]="true"
+                                    [ngClass]="{'is-valid': password_usuario.valid,'is-invalid': !password_usuario.valid && validar}"
+                                    name="password_usuario" [(ngModel)]="register.password_usuario"    autocomplete="off"
+                                    type="password" placeholder="Contraseña">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" #password_repetido="ngModel"
+                                    [required]="true"
+                                    [ngClass]="{'is-valid': password_repetido==password_usuario,'is-invalid':  validar}"
+                                    name="password_repetido" [(ngModel)]="register.password_repetido"   autocomplete="off" 
+                                    type="password" placeholder="Confirmar Contraseña">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <button  class="btn btn-warning btn-block" type="submit" style="background: #fef400;">Register</button>
+                                </div>
+                            </form>
+                            <!-- /Form -->
+                            <div class="text-center dont-have">¿Ya tienes una cuenta? <a routerLink="/loginMedico">Acceso</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Main Wrapper -->
+    

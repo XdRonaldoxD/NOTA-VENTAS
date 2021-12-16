@@ -1,0 +1,287 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="card-header">
+                <h4 class="card-title">Lista de Presentaciones al Producto</h4>
+                    <p class="card-text">
+                        Se muestra el listado de todas las presentaciones para los productos.
+                    </p>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-tabs-solid">
+                        <li class="nav-item"><a class="nav-link active" href="#solid-justified-tab1" data-toggle="tab">Activados</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#solid-justified-tab2" data-toggle="tab">Desactivados</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="solid-justified-tab1">
+                            <div class="card">
+                                <div class="row m-0">
+                                    <div class="col-md-12 col-12  mt-3" style="text-align: end;">
+                                            <button type="button" (click)="AgregarMarca()" class="agrandar btn btn-sm btn-outline-success active">
+                                                 Agregar Presentación   <i class="fe fe-plus"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando" >
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h5 class="display-4 text-primary">Cargando...</h5>
+                                    <div class="loader loader--style1" title="0">
+                                      <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        x="0px" y="0px" width="100px" height="100px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+                                        xml:space="preserve">
+                                        <path opacity="0.2" fill="#000"
+                                          d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                        <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                          <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20"
+                                            dur="0.5s" repeatCount="indefinite" />
+                                        </path>
+                                      </svg>
+                                    </div>
+                                  </div>
+
+                                <div class="card-body" *ngIf="!cargando">
+                                    <div class="table-responsive">
+                                        <table datatable [dtOptions]="dtOptions[0]" class="datatable table table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>NOMBRE DE LA PRESENTACION</th>
+                                                    <th class="text-center">ACCIÓNES</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container  *ngFor="let item of listarPresentacion  | presentacion : filtrarTabla | paginate 
+                                                : { id:'pagination1', itemsPerPage: this.numrows, currentPage: pageActual }; let i = index "  >
+                                                    <tr >
+                                                        <td>{{item.glosa_unidad}}</td>
+                                                        <td class="text-center">
+                                                            <div class="actions">
+                                                                <button (click)="AsignarConcentracion(item.id_unidad,item.glosa_unidad)" class="agrandar btn btn-sm bg-warning-light" data-toggle="modal" href="#edit_specialities_details">
+                                                                    <i class="fe fe-pencil"></i> Asignar
+                                                                </button>
+                                                                &nbsp;&nbsp;
+                                                                <button (click)="EditaPresentacion(item.id_unidad)" class="agrandar btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                                    <i class="fe fe-pencil"></i> Editar
+                                                                </button>
+                                                                &nbsp;&nbsp;
+                                                                <button (click)="DesactivarPresentacion(item.id_unidad,item.glosa_unidad)" data-toggle="modal" href="#delete_modal" class="agrandar btn btn-sm bg-danger-light">
+                                                                    <i class="fe fe-close"></i> Desactivar
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="solid-justified-tab2">
+                            <div class="card">
+                                <div class="row m-0">
+                                    <div class="col-md-12 col-12  mt-3" style="text-align: end;">
+                                            <button type="button" (click)="AgregarMarca()" class="agrandar btn btn-sm btn-outline-success active">
+                                                 Agregar Presentación   <i class="fe fe-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando2" >
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h5 class="display-4 text-primary">Cargando...</h5>
+                                    <div class="loader loader--style1" title="0">
+                                      <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        x="0px" y="0px" width="100px" height="100px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+                                        xml:space="preserve">
+                                        <path opacity="0.2" fill="#000"
+                                          d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                        <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                          <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20"
+                                            dur="0.5s" repeatCount="indefinite" />
+                                        </path>
+                                      </svg>
+                                    </div>
+                                  </div>
+
+                                <div class="card-body" *ngIf="!cargando2">
+                                    <div class="table-responsive">
+                                        <table datatable [dtOptions]="dtOptions[1]"  class="datatable table table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>NOMBRE DE LA PRESENTACION</th>
+                                                    <th class="text-center">ACCIÓNES</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container  *ngFor="let item of listarDesactivadosPresentacion  | presentacion : filtrarTabla2  | paginate  : { id:'pagination2' , itemsPerPage: this.numrows2, currentPage: pageActual2 }; let i = index "  >
+                                                    <tr >
+                                                        <td>{{item.glosa_unidad}}</td>
+                                                        <td class="text-center">
+                                                            <div class="actions">
+                                                                <button (click)="AsignarConcentracion(item.id_unidad)" class="agrandar btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                                    <i class="fe fe-pencil"></i> Asignar
+                                                                </button>
+                                                                &nbsp;&nbsp;
+                                                                <button (click)="EditaPresentacion(item.id_unidad)" class="agrandar btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                                    <i class="fe fe-pencil"></i> Editar
+                                                                </button>
+                                                                &nbsp;&nbsp;
+                                                                <button (click)="ActivarPresentacion(item.id_unidad,item.glosa_unidad)" data-toggle="modal" href="#delete_modal" class="agrandar btn btn-sm bg-success-light">
+                                                                    <i class="fe fe-check"></i> Activar
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+     
+
+
+    </div>
+</div>
+
+
+<!-- /Main Wrapper -->
+
+
+<div class="modal fade" id="modal_marca" tabindex="-1" role="dialog" aria-labelledby="modal_marca" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+       
+      <div class="modal-content">
+        <form #registraUnidad="ngForm" (ngSubmit)="EnviarDatosUnidad(registraUnidad)">
+            <div class="modal-header">
+              <h5 class="modal-title titulo_presentacion">Nueva Presentación</h5>
+              <button class="close" type="button" data-dismiss="modal"  aria-label="Close" (click)="cerrarModal()" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="">Presentación</label>
+                            <input type="text" class="glosa_unidad form-control" #glosa_unidad="ngModel" [(ngModel)]="unidad.glosa_unidad"
+                            [ngClass]="{'is-valid': glosa_unidad.valid,'is-invalid': !glosa_unidad.valid && validar}"
+                            type="text" name="glosa_unidad"
+                            placeholder="Nombre de la Presentación" required
+                            />
+                        </div>
+                    </div> 
+                  </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cerrarModal()" type="button" data-dismiss="modal" data-original-title="" title="">Salir</button>
+              <button class="btn btn-primary"   type="submit" data-original-title="" title="">Guardar</button>
+            </div>
+        </form>
+      </div>
+ 
+    </div>
+</div>
+
+
+<div class="modal fade" id="detallePresentacion" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="detalleProcedimientoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style=" background: #fbfbfb; ">
+            <div class="modal-header text-center">
+                <h4 class="modal-title mx-auto" id="detalleProcedimientoTittle">Asignar Tipo Concentración</h4>
+            </div>
+            <div class="modal-body">
+                <form #registraConcentracion="ngForm" (ngSubmit)="EnviarDatosConcentracion(registraConcentracion)" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            <strong>Presentacion: </strong><span id="presentacion"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" [(ngModel)]="tipo_concentracion.glosa_tipo_concentracion" name="glosa_tipo_concentracion"
+                                    #glosa_tipo_concentracion="ngModel" placeholder="Tipo Concentración"  maxlength="50" [required]="true"
+                                    [ngClass]="{'is-valid': glosa_tipo_concentracion.valid,'is-invalid': !glosa_tipo_concentracion.valid && validarConcentracion}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <div class="col-md-12 mt-1">
+                                    <button type="submit" class="btn btn-success btn-sm text-white" id="btn-save"  ><i id="icon-save" style="vertical-align: text-bottom;" class="bx bx-add-to-queue"></i> AGREGAR CONCENTRACION
+                                    </button>
+                                    <button type="button" (click)="CancelarConcentracion()"  data-toggle="tooltip" data-original-title="Cancelar Edición" class="cancelar btn btn-sm btn-danger text-white d-none ml-1"  ><i  style="vertical-align: text-bottom;" class="fe fe-close"></i> 
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </form>
+                <div class="tab-content mt-2">
+                    <div class="lista-tittle mb-1">
+                        <h4 id="listaDetalleTittle">Listado de Concentración</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered center-text-table table--bg" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Tipo Concentración</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container  *ngFor="let item of listarConcentracion"  >
+                                    <tr>
+                                        <td>{{item.glosa_tipo_concentracion}}</td>
+                                        <td class="text-center">
+                                            <div class="actions">
+                                                <button (click)="EditarConcentracion(item.id_tipo_concentracion)" class="agrandar btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                    <i class="fe fe-pencil"></i> Editar
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button (click)="EliminarConcentracion(item.id_tipo_concentracion)" class="agrandar btn btn-sm bg-danger-light" data-toggle="modal" href="#edit_specialities_details">
+                                                    <i class="fe fe-close"></i> Eliminar
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mt-1">
+                        <table id="total_detalle" class="table table-bordered center-text-table table--bg" style="width:50%">
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">Volver</button>
+
+              </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,27 @@
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="table-responsive-lg">
+
+            <table class="table">
+                <thead>
+                    <tr style="border-bottom: 1px solid #f2f2f2; height: 35px;">
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody cdkDropList  [cdkDropListData]="listaProducto" (cdkDropListDropped)="drop($event)">
+                    <tr *ngFor="let item of listaProducto;let i = index" cdkDrag>
+                        <td class="text-center"> <input type="text"  name="valor[]"  [value]="i+1"> </td>
+                        <td class="text-center">{{item.glosa_producto}} -{{i}}</td>
+                        <td class="text-center"> <button class="btn btn-success btn-sm"> Prueba </button> </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <!-- <ul class="list-group" cdkDropList>
+                <li class="list-group-item" *ngFor="let item of listaProducto" cdkDrag>{{item.glosa_producto}}</li>
+            </ul> -->
+        </div>
+    </div>
+</div>

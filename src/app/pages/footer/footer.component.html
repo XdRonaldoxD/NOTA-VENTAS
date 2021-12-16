@@ -1,0 +1,59 @@
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-inner slimscroll">
+    <div id="sidebar-menu" class="sidebar-menu">
+      <ul>
+        <li class="menu-title">
+          <span>Principal</span>
+        </li>
+        <li class="active click" (click)="activado($event.target)">
+          <a routerLink="inicio"><i class="fe fe-home"></i> <span>Inicio</span></a>
+        </li>
+        <li class="submenu">
+          <a href="#"><i class="fe fe-document"></i> <span>Modulos</span> <span class="menu-arrow"></span></a>
+          <ul style="display: none;">
+            <li><a (click)="activado($event.target)"  routerLink="Tipo_Inventario"><i class="fe fe-tiled"></i> Inventario</a></li>
+            <li><a (click)="activado($event.target)"  routerLink="Marca"> <i class="fe fe-tag"></i> Marca</a></li>
+            <li><a (click)="activado($event.target)"  routerLink="Presentacion"><i class="fe fe-mouse"></i> Presentación</a></li>
+            <li><a (click)="activado($event.target)"  routerLink="Proveedor"> <i class="fe fe-truck"></i> Laboratorio</a></li>
+            <li><a (click)="activado($event.target)"  routerLink="Producto"><i class="fe fe-shopping-bag"></i> Producto</a></li>
+            <li><a (click)="activado($event.target)"  routerLink="Inventario_Producto"><i class="fe fe-plus"></i>Iventario Producto</a></li>
+          </ul>
+        </li>
+        <li class="menu-title">
+          <span>Pagos</span>
+        </li>
+        <li class="submenu">
+          <a href="#"><i class="fe fe-document"></i> <span> Pagos </span> <span class="menu-arrow"></span></a>
+          <ul style="display: none;">
+            <li><a  (click)="activado($event.target)" routerLink="Nota_Venta"> <i class="fe fe-book"></i> Realizar Venta </a></li>
+            <li><a  (click)="activado($event.target)" routerLink="Nota_Venta_Detalle"> <i class="fe fe-document"></i>  Detalle de la Venta </a></li>
+
+          </ul>
+        </li>
+        <li class="submenu">
+          <a href="#"><i class="fe fe-document"></i> <span> Caja </span> <span class="menu-arrow"></span></a>
+          <ul style="display: none;">
+            <li><a  (click)="activado($event.target)" routerLink="Caja"><i class="fe fe-money"></i>  Apertura Caja </a></li>
+          </ul>
+        </li>
+
+        <li class="submenu">
+          <a href="#"><i class="fe fe-layout"></i> <span> Reporte </span> <span class="menu-arrow"></span></a>
+          <ul style="display: none;">
+            <li><a (click)="activado($event.target)" routerLink="Reporte_Grafico"> <i class="fe fe-picture-square"></i> Reporte Grafica </a></li>
+            <li><a (click)="activado($event.target)" routerLink="ReporteVenta"> <i class="fe fe-file-zip"></i> Reporte Venta </a></li>
+          </ul>
+        </li>
+
+        <li class="submenu ">
+          <a href="#"><i class="fe fe-download"></i> <span> Migración Excel </span> <span class="menu-arrow"></span></a>
+          <ul style="display: none;">
+            <li><a (click)="activado($event.target)" routerLink="MigrarProducto"> <i class="fe fe-file-excel"></i> Producto </a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- /Sidebar -->

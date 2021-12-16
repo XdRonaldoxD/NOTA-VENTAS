@@ -1,0 +1,940 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="card-header">
+                <h4 class="card-title">Listado y Gestión de los Productos</h4>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="">Presentación </label>
+                        <input type="text" class=" form-control " #codigo_filtro="ngModel"
+                            [(ngModel)]="producto_filtro.codigo_filtro" name="codigo_filtro"
+                            placeholder="Codigo del Producto" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="">Nombre </label>
+                        <input type="text" class=" form-control " #nombre_produc_filtro="ngModel"
+                            [(ngModel)]="producto_filtro.nombre_produc_filtro" name="nombre_produc_filtro"
+                            placeholder="Nombre del Producto" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="">Tipo Inventario </label>
+                        <select class="form-control" #producto_inventario_filtro="ngModel"
+                            name="producto_inventario_filtro" [(ngModel)]="producto_filtro.producto_inventario_filtro">
+                            <option value="">Seleccione </option>
+                            <ng-container *ngFor="let item of listarInventario">
+                                <option value="{{ item.id_tipo_inventario }}">{{item.glosa_tipo_inventario}}
+                                </option>
+                            </ng-container>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12">
+                    <div class="form-group">
+                        <label for="">Tipo Producto </label>
+                        <select class="form-control" #producto_tipo_filtro="ngModel" name="producto_tipo_filtro"
+                            [(ngModel)]="producto_filtro.producto_tipo_filtro">
+                            <option value="">Seleccione Producto</option>
+                            <ng-container *ngFor="let item of listaTipoProducto">
+                                <option value="{{ item.id_tipo_producto }}">{{item.glosa_tipo_producto}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12 col-12 row justify-content-end align-content-end">
+                    <div class="form-group ">
+                        <button type="button" class="btn  btn-primary" (click)="BuscarProducto()">Buscar<i
+                                class="fa fa-search ml-1"></i></button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-tabs-solid">
+                        <li class="nav-item"><a class="nav-link active" href="#solid-justified-tab1"
+                                data-toggle="tab">Activados</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#solid-justified-tab2"
+                                data-toggle="tab">Desactivados</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="solid-justified-tab1">
+                            <div class="card">
+                                <div class="row m-0">
+                                    <div class="col-md-6 filtrar-content">
+                                        <div class="row">
+                                            <div class="col-md-6 mt-3">
+                                                <div class="top-nav-search">
+
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Buscar producto" [(ngModel)]="filtrarTabla"
+                                                        (keyup)="busqueda(filtrarTabla)">
+                                                    <button type="button" class="btn"><i
+                                                            class="fa fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-3 mt-2">
+                                                        <label>Mostrar:</label>
+                                                    </div>
+                                                    <div class="col-md-4 mt-1">
+                                                        <select class="custom-select custom-select-sm"
+                                                            (change)="cambio($event.target.value)">
+                                                            <option value="5" selected>5</option>
+                                                            <option value="10">10</option>
+                                                            <option value="15">15</option>
+                                                            <option value="20">20</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12  mt-3" style="text-align: end;">
+                                        <button type="button" (click)="AgregarProducto()"
+                                            class="agrandar btn btn-sm btn-outline-success active">
+                                            Agregar Producto <i class="fe fe-plus"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando">
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h5 class="display-4 text-primary">Cargando...</h5>
+                                    <div class="loader loader--style1" title="0">
+                                        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
+                                            height="100px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+                                            xml:space="preserve">
+                                            <path opacity="0.2" fill="#000"
+                                                d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                            <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                                <animateTransform attributeType="xml" attributeName="transform"
+                                                    type="rotate" from="0 20 20" to="360 20 20" dur="0.5s"
+                                                    repeatCount="indefinite" />
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="card-body" *ngIf="!cargando">
+                                    <div class="table-responsive">
+                                        <table class="datatable table table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 10%;">TIPO INVENTARIO</th>
+                                                    <th class="text-center" style="width: 13%;">PRESENTACIÓN</th>
+                                                    <th class="text-center" style="width: 13%;">PRODUCTO </th>
+                                                    <th class="text-center" style="width: 11%;">TIPO PRODUCTO </th>
+                                                    <th class="text-center" style="width: 10%;">PRECIO VENTA</th>
+                                                    <th class="text-center" style="width: 10%;">STOCK </th>
+                                                    <th class="text-center" style="width: 13%;">ACCIÓNES</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let item of listaProducto  | producto : filtrarTabla | paginate 
+                                                : { id:'pagination1', itemsPerPage: this.numrows, currentPage: pageActual }; let i = index ">
+                                                    <tr>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_tipo_inventario}}</td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_unidad}}</td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_producto}}</td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_tipo_producto}}
+                                                        </td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            <b>S/{{item.precioventa_producto}}</b>
+                                                        </td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            <ng-container
+                                                                *ngIf="item.stock_producto>0; else elseTemplate">
+                                                                <label
+                                                                    style="color: white;border-radius: 10px;padding: 0px 5px; background: green;">Stock:
+                                                                    {{item.stock_producto}}</label>
+                                                            </ng-container>
+                                                            <ng-template #elseTemplate>
+                                                                <label
+                                                                    style="color: white;border-radius: 10px;padding: 0px 5px; background: rgb(218, 21, 15);">Stock:
+                                                                    {{item.stock_producto}}</label>
+                                                            </ng-template>
+                                                        </td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <button (click)="EditarProducto(item.id_producto)"
+                                                                        class="agrandar btn btn-sm bg-success-light"
+                                                                        data-toggle="modal" tooltip="Editar Producto"
+                                                                        placement="top" show-delay="200">
+                                                                        <i class="fe fe-pencil"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <button
+                                                                        (click)="DesactivarProducto(item.id_producto,item.glosa_producto)"
+                                                                        data-toggle="modal"
+                                                                        tooltip="Desactivar Producto" placement="top"
+                                                                        show-delay="200"
+                                                                        class="agrandar btn btn-sm bg-danger-light">
+                                                                        <i class="fe fe-close"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <button (click)="GestionarStock(item.id_producto)"
+                                                                        data-toggle="modal" tooltip="Gestionar Stock"
+                                                                        placement="top" show-delay="200"
+                                                                        class="agrandar btn btn-sm bg-warning-light">
+                                                                        <i class="fe fe-truck"></i>
+                                                                    </button>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12 mt-2">
+                                                                    <button
+                                                                        (click)="HistorialProducto(item.id_producto)"
+                                                                        data-toggle="modal"
+                                                                        class="agrandar btn btn-sm bg-info-light"
+                                                                        tooltip="Historial del Producto" placement="top"
+                                                                        show-delay="200">
+                                                                        <i class="fe fe-document"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                        <pagination-controls id="pagination1" class="my-pagination"
+                                            (pageChange)="pageActual = $event" previousLabel="Anterior"
+                                            nextLabel="Siguiente" responsive="true"></pagination-controls>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="solid-justified-tab2">
+                            <div class="card">
+                                <div class="row m-0">
+                                    <div class="col-md-6 filtrar-content">
+                                        <div class="row">
+                                            <div class="col-md-6 mt-3">
+                                                <div class="top-nav-search">
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Buscar producto" [(ngModel)]="filtrarTabla2">
+                                                    <button type="button" class="btn"><i
+                                                            class="fa fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-3 mt-2">
+                                                        <label>Mostrar:</label>
+                                                    </div>
+                                                    <div class="col-md-4 mt-1">
+                                                        <select class="custom-select custom-select-sm"
+                                                            (change)="cambio2($event.target.value)">
+                                                            <option value="5" selected>5</option>
+                                                            <option value="10">10</option>
+                                                            <option value="15">15</option>
+                                                            <option value="20">20</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12 text-center mt-3">
+                                        <button type="button" (click)="AgregarProducto()"
+                                            class="agrandar btn btn-sm btn-outline-success active">
+                                            Agregar Producto <i class="fe fe-plus"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando2">
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h5 class="display-4 text-primary">Cargando...</h5>
+                                    <div class="loader loader--style1" title="0">
+                                        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
+                                            height="100px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+                                            xml:space="preserve">
+                                            <path opacity="0.2" fill="#000"
+                                                d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                            <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                                <animateTransform attributeType="xml" attributeName="transform"
+                                                    type="rotate" from="0 20 20" to="360 20 20" dur="0.5s"
+                                                    repeatCount="indefinite" />
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="card-body" *ngIf="!cargando2">
+                                    <div class="table-responsive">
+                                        <table class="datatable table table-stripped">
+                                            <thead>
+
+                                                <tr>
+                                                    <th class="text-center" style="width: 10%;">TIPO INVENTARIO</th>
+                                                    <th class="text-center" style="width: 13%;">PRESENTACIÓN</th>
+                                                    <th class="text-center" style="width: 13%;">PRODUCTO </th>
+                                                    <th class="text-center" style="width: 11%;">TIPO PRODUCTO </th>
+                                                    <th class="text-center" style="width: 10%;">PRECIO VENTA </th>
+                                                    <th class="text-center" style="width: 10%;">STOCK </th>
+                                                    <th class="text-center" style="width: 13%;">ACCIÓNES</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let item of listarDesactivadosProducto  | producto : filtrarTabla2 | paginate 
+                                            : { id:'pagination2', itemsPerPage: this.numrows2, currentPage: pageActual2 }; let i = index ">
+                                                    <tr>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_tipo_inventario}}</td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_unidad}}</td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_producto}}</td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            {{item.glosa_tipo_producto}}
+                                                        </td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            <b>S/{{item.precioventa_producto}}</b>
+                                                        </td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            <ng-container
+                                                                *ngIf="item.stock_producto>0; else elseTemplate">
+                                                                <label
+                                                                    style="color: white;border-radius: 10px;padding: 0px 5px; background: green;">Stock:
+                                                                    {{item.stock_producto}}</label>
+                                                            </ng-container>
+                                                            <ng-template #elseTemplate>
+                                                                <label
+                                                                    style="color: white;border-radius: 10px;padding: 0px 5px; background: rgb(218, 21, 15);">Stock:
+                                                                    {{item.stock_producto}}</label>
+                                                            </ng-template>
+                                                        </td>
+                                                        <td class="text-center" style="vertical-align:middle;">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <button (click)="EditarProducto(item.id_producto)"
+                                                                        class="agrandar btn btn-sm bg-success-light"
+                                                                        data-toggle="modal" tooltip="Editar Producto"
+                                                                        placement="top" show-delay="200">
+                                                                        <i class="fe fe-pencil"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <button
+                                                                        (click)="ActivarProducto(item.id_producto,item.glosa_producto)"
+                                                                        data-toggle="modal" tooltip="Activar Producto"
+                                                                        placement="top" show-delay="200"
+                                                                        class="agrandar btn btn-sm bg-success-light">
+                                                                        <i class="fe fe-check"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <button (click)="GestionarStock(item.id_producto)"
+                                                                        data-toggle="modal" tooltip="Gestionar Stock"
+                                                                        placement="top" show-delay="200"
+                                                                        class="agrandar btn btn-sm bg-warning-light">
+                                                                        <i class="fe fe-truck"></i>
+                                                                    </button>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12 mt-2">
+                                                                    <button
+                                                                        (click)="HistorialProducto(item.id_producto,item.glosa_producto)"
+                                                                        data-toggle="modal"
+                                                                        class="agrandar btn btn-sm bg-info-light"
+                                                                        tooltip="Historial del Producto" placement="top"
+                                                                        show-delay="200">
+                                                                        <i class="fe fe-document"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                        <pagination-controls id='pagination2' (pageChange)="pageActual2 = $event"
+                                            previousLabel="Anterior" nextLabel="Siguiente" responsive="true">
+                                        </pagination-controls>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+
+<!-- /Main Wrapper -->
+
+
+<div class="modal fade" id="modal_marca" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="modal_marca" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <form #registraProducto="ngForm" (ngSubmit)="EnviarDatosProducto(registraProducto)">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Producto</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title=""
+                        title=""><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Presentación</label>
+                                <input type="text" class=" form-control " #codigo_producto="ngModel"
+                                    [(ngModel)]="producto.codigo_producto" name="codigo_producto"
+                                    placeholder="Codigo del Producto" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Nombre Producto<b class="text-danger">(*)</b></label>
+                                <input type="text" class=" form-control " #nombre_producto="ngModel"
+                                    [(ngModel)]="producto.glosa_producto" name="nombre_producto"
+                                    placeholder="Nombre del Producto"
+                                    [ngClass]="{'is-valid': nombre_producto.valid ,'is-invalid': !nombre_producto.valid && validar}"
+                                    [required]="true" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Laboratorio</label>
+                                <ng-select class="laboratorio" #producto_proveedor="ngModel" name="producto_proveedor"
+                                    [(ngModel)]="producto.id_proveedor" [required]="false">
+                                    <ng-option value="" hidden>Seleccione el Laboratorio</ng-option>
+                                    <ng-option *ngFor="let item of listaProveedor" [value]="item.id_proveedor">
+                                        {{item.glosa_proveedor}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Tipo Inventario <b class="text-danger">(*)</b> </label>
+                                <ng-select  #producto_inventario="ngModel" name="producto_inventario"
+                                    [(ngModel)]="producto.id_tipo_inventario"
+                                    [ngClass]="{'is-valid': producto_inventario.valid ,'ng-invalid': !producto_inventario.valid && validar}"
+                                    [required]="true">
+                                    <ng-option value="" hidden>Seleccione el Inventario</ng-option>
+                                    <ng-option *ngFor="let item of listarInventario" [value]="item.id_tipo_inventario">
+                                        {{item.glosa_tipo_inventario}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Tipo Producto <b class="text-danger">(*)</b> </label>
+                                <select class="form-control" #producto_tipo_producto="ngModel"
+                                    name="producto_tipo_producto" [(ngModel)]="producto.id_tipo_producto"
+                                    [ngClass]="{'is-valid': producto_tipo_producto.valid ,'is-invalid': !producto_tipo_producto.valid && validar}"
+                                    [required]="true">
+                                    <option value="" >Seleccione el tipo producto</option>
+                                    <ng-container *ngFor="let item of listaTipoProducto">
+                                        <option value="{{ item.id_tipo_producto }}">{{item.glosa_tipo_producto}}
+                                        </option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Marca </label>
+                                <!-- <select class="form-control" #producto_proveedor="ngModel" name="producto_proveedor"
+                                    [(ngModel)]="producto.id_marca" [required]="false">
+                                    <option value="" hidden>Seleccione una marca</option>
+                                    <ng-container *ngFor="let item of listarMarcas">
+                                        <option value="{{ item.id_marca }}">{{item.glosa_marca}}</option>
+                                    </ng-container>
+                                </select> -->
+                                <ng-select #producto_proveedor="ngModel" name="producto_proveedor"
+                                    [(ngModel)]="producto.id_marca" [required]="false">
+                                    <ng-option value="" hidden>Seleccione una marca</ng-option>
+                                    <ng-option *ngFor="let car of listarMarcas" [value]="car.id_marca">
+                                        {{car.glosa_marca}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Presentación <b class="text-danger">(*)</b> </label>
+                                <select class="form-control" #producto_presentacion="ngModel"
+                                    name="producto_presentacion" [(ngModel)]="producto.id_unidad"
+                                    (change)="tipo_concentracion($event.target.value)"
+                                    [ngClass]="{'is-valid': producto_presentacion.valid ,'is-invalid': !producto_presentacion.valid && validar}"
+                                    [required]="true">
+                                    <option value="" hidden>Seleccione una unidad</option>
+                                    <ng-container *ngFor="let item of listaPresentacion">
+                                        <option value="{{ item.id_unidad }}">{{item.glosa_unidad}}</option>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Tipo Concentración <b class="text-danger">(*)</b> </label>
+                                <select class="form-control tipo_concentracion" #producto_concentracion="ngModel"
+                                    name="producto_concentracion" [(ngModel)]="producto.id_tipo_concentracion"
+                                    (change)="glosa_concentracion_text()"
+                                    [ngClass]="{'is-valid': producto_concentracion.valid ,'is-invalid': !producto_concentracion.valid && validar}"
+                                    [required]="true">
+                                    <option value="" hidden>Seleccione Tipo de Concentración</option>
+                                    <!-- <ng-container *ngFor="let item of listaPresentacion">
+                                        <option value="{{ item.id_unidad }}">{{item.glosa_unidad}}</option>
+                                    </ng-container> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Concentración {{glosa_concentracion}}</label>
+                                <input type="number" class=" form-control " #concentracion_producto="ngModel"
+                                    [(ngModel)]="producto.concentracion_producto" name="concentracion_producto"
+                                    placeholder="Ingrese una concentración" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Dosis </label>
+                                <input type="number" class=" form-control " #dosis_producto="ngModel"
+                                    [(ngModel)]="producto.dosis_producto" name="dosis_producto"
+                                    placeholder="Ingrese una Dosis" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Cantidad Inicial<b class="text-danger">(*)</b> </label>
+                                <input type="number" class=" form-control " #stock_producto="ngModel"
+                                    [ngClass]="{'is-valid': stock_producto.valid ,'is-invalid': !stock_producto.valid && validar}"
+                                    [(ngModel)]="producto.stock_producto" name="stock_producto"
+                                    placeholder="Ingrese el stock" [required]="true" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Precio Costo </label>
+                                <input type="number" class="form-control " #precio_costo_producto="ngModel"
+                                    [(ngModel)]="producto.preciocosto_producto" name="precio_costo_producto"
+                                    placeholder="Ingrese el precio de costo" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="precoo_venta_producto" class="m-0">Precio Venta <b
+                                        class="text-danger">(*)</b> </label>
+                                <input type="number" class=" form-control " id="precoo_venta_producto"
+                                    #precoo_venta_producto="ngModel" [(ngModel)]="producto.precioventa_producto"
+                                    name="precoo_venta_producto"
+                                    [ngClass]="{'is-valid': precoo_venta_producto.valid ,'is-invalid': !precoo_venta_producto.valid && validar}"
+                                    placeholder="Ingrese el precio de venta" [required]="true" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="" class="m-0">Comentario Producto</label>
+                            <!-- <textarea [(ngModel)]="producto.detalle_producto" class="form-control" #comentario_producto="ngModel"
+                            name="comentario_producto" id="" cols="30" rows="10"></textarea> -->
+                            <ckeditor [(ngModel)]="producto.detalle_producto" #comentario_producto="ngModel"
+                                name="comentario_producto" required [config]="ckeConfig" debounce="300"
+                                [required]="false">
+                            </ckeditor>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" (click)="cerrarModal()" type="button" data-dismiss="modal"
+                        data-original-title="" title="">Salir</button>
+                    <button class="btn btn-primary" type="submit" data-original-title="" title="">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal_edit" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modal_edit"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <form #EditProducto="ngForm" (ngSubmit)="EnviarDatosProductoEditado(EditProducto)">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Producto</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title=""
+                        title=""><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Presentación</label>
+                                <input type="text" class=" form-control " #codigo_producto="ngModel"
+                                    [(ngModel)]="producto_edit.codigo_producto" name="codigo_producto"
+                                    placeholder="Codigo del Producto" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Nombre Producto<b class="text-danger">(*)</b></label>
+                                <input type="text" class=" form-control " #nombre_producto="ngModel"
+                                    [(ngModel)]="producto_edit.glosa_producto" name="nombre_producto"
+                                    placeholder="Nombre del Producto"
+                                    [ngClass]="{'is-valid': nombre_producto.valid ,'is-invalid': !nombre_producto.valid && validar}"
+                                    [required]="true" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Laboratorio</label>
+                                <ng-select class="producto_proveedor_edit" #producto_proveedor_edit="ngModel"
+                                    name="producto_proveedor_edit" [(ngModel)]="producto_edit.id_proveedor"
+                                    [required]="false">
+                                    <ng-option *ngFor="let item of listaProveedor" [value]="item.id_proveedor">
+                                        {{item.glosa_proveedor}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Tipo Inventario <b class="text-danger">(*)</b> </label>
+                                <ng-select class="clase_tipo_inventario" #producto_inventario="ngModel"
+                                    name="producto_inventario" [(ngModel)]="producto_edit.id_tipo_inventario"
+                                    [ngClass]="{'is-valid': producto_inventario.valid ,'is-invalid': !producto_inventario.valid && validar}"
+                                    [required]="true">
+                                    <ng-option *ngFor="let item of listarInventario" [value]="item.id_tipo_inventario">
+                                        {{item.glosa_tipo_inventario}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Tipo Producto <b class="text-danger">(*)</b> </label>
+                                <ng-select #producto_tipo_producto="ngModel" name="producto_tipo_producto"
+                                    [(ngModel)]="producto_edit.id_tipo_producto"
+                                    [ngClass]="{'is-valid': producto_tipo_producto.valid ,'is-invalid': !producto_tipo_producto.valid && validar}"
+                                    [required]="true">
+                                    <ng-option *ngFor="let item of listaTipoProducto" [value]="item.id_tipo_producto">
+                                        {{item.glosa_tipo_producto}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Marca </label>
+                                <ng-select #producto_proveedor="ngModel" name="producto_proveedor"
+                                    [(ngModel)]="producto_edit.id_marca" [required]="false">
+                                    <ng-option *ngFor="let car of listarMarcas" [value]="car.id_marca">
+                                        {{car.glosa_marca}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Presentación <b class="text-danger">(*)</b> </label>
+                                <ng-select #producto_presentacion="ngModel" name="producto_presentacion"
+                                    [(ngModel)]="producto_edit.id_unidad" (change)="tipo_concentracion($event)">
+                                    <ng-option *ngFor="let item of listaPresentacion" [value]="item.id_unidad">
+                                        {{item.glosa_unidad}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Tipo Concentración <b class="text-danger">(*)</b> </label>
+                                <select class="form-control tipo_concentracion" #producto_concentracion_edit="ngModel"
+                                    name="producto_concentracion_edit" [(ngModel)]="producto_edit.id_tipo_concentracion"
+                                    (change)="glosa_concentracion_text_edit()"
+                                    [ngClass]="{'is-valid': producto_concentracion_edit.valid ,'is-invalid': !producto_concentracion_edit.valid && validar}"
+                                    [required]="true">
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Concentración {{glosa_concentracion_edit}}</label>
+                                <input type="number" class=" form-control " #concentracion_producto="ngModel"
+                                    [(ngModel)]="producto_edit.concentracion_producto" name="concentracion_producto"
+                                    placeholder="Ingrese una concentración" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Dosis </label>
+                                <input type="number" class=" form-control " #dosis_producto="ngModel"
+                                    [(ngModel)]="producto_edit.dosis_producto" name="dosis_producto"
+                                    placeholder="Ingrese una Dosis" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Cantidad Actual del Producto </label>
+                                <input type="number" class=" form-control " readonly #stock_producto="ngModel"
+                                    [(ngModel)]="producto_edit.stock_producto" name="stock_producto"
+                                    placeholder="Ingrese el stock" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Cantidad Inicial del Producto </label>
+                                <input type="number" class=" form-control " #cantidad_producto="ngModel"
+                                    [(ngModel)]="producto_edit.cantidad_producto" readonly name="cantidad_producto"
+                                    placeholder="Ingrese el stock" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Precio Costo </label>
+                                <input type="number" class=" form-control " #precio_costo_producto="ngModel"
+                                    [(ngModel)]="producto_edit.preciocosto_producto" readonly
+                                    name="precio_costo_producto" placeholder="Ingrese el precio de costo"
+                                    [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="form-group">
+                                <label for="" class="m-0">Precio Venta </label>
+                                <input type="number" class=" form-control " #precoo_venta_producto="ngModel"
+                                    [(ngModel)]="producto_edit.precioventa_producto" name="precio_venta_producto"
+                                    placeholder="Ingrese el precio de venta" [required]="false" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="" class="m-0">Comentario Producto</label>
+                            <!-- <textarea  [(ngModel)]="producto_edit.detalle_producto" #comentario_producto="ngModel"
+                            name="comentario_producto" class="form-control" cols="30" rows="10"></textarea> -->
+                            <ckeditor [(ngModel)]="producto_edit.detalle_producto" #comentario_producto="ngModel"
+                                name="comentario_producto" required [config]="ckeConfig" debounce="300"
+                                [required]="false">
+                            </ckeditor>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" (click)="cerrarModal()" type="button" data-dismiss="modal"
+                        data-original-title="" title="">Salir</button>
+                    <button class="btn btn-primary" type="submit" data-original-title="" title="">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- -MODAL Gestionar Cantidad -->
+<div class="modal fade" id="gestionar-stock-modal" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog    modal-lg" style="width: 52%!important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center">Actualizar Cantidad</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title=""
+                    title=""><span aria-hidden="true">×</span></button>
+            </div>
+            <form #gestionarStockForm="ngForm" (ngSubmit)="GuardarHistorial(gestionarStockForm)"
+                name="gestionarStockForm">
+                <div class="modal-body">
+
+                    <div class="row container" style="align-items: center;">
+                        <img style=" width: 80px; " class="img-fluid" src="../../../assets/img/producto.png"
+                            alt="producto">
+                        <ul style="margin:0px; list-style:none;">
+                            <li id="label-glosa">{{this.producto.glosa_producto}}</li>
+                            <li id="label-cantidad">Unidad actual <b>{{this.producto.stock_producto}}</b> unidades</li>
+                        </ul>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="firstName13">Acción <strong class="text-danger">(*)</strong> </label>
+                                <select class="select2 form-control" [(ngModel)]="producto_historial.tipo_movimiento"
+                                    #accion_gestionar="ngModel" name="accion_gestionar" (change)="CalcularCantidad()"
+                                    [ngClass]="{'is-valid': accion_gestionar.valid ,'is-invalid': !accion_gestionar.valid && validarStock}"
+                                    [required]="true">
+                                    <option value=""><strong> Seleccionar Acción</strong></option>
+                                    <option value="Añadir"><strong> Añadir</strong></option>
+                                    <option value="Quitar"> <strong> Quitar</strong></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="firstName13">Cantidad <strong class="text-danger">(*)</strong></label>
+                                <input (keyup)="CalcularCantidad()" name="cantidad_movimiento"
+                                    #cantidad_movimiento="ngModel" [required]="true"
+                                    [ngClass]="{'is-valid': cantidad_movimiento.valid ,'is-invalid': !cantidad_movimiento.valid && validarStock}"
+                                    type="number" [(ngModel)]="producto_historial.movimiento_historial"
+                                    placeholder="Ingrese una cantidad " class=" form-control ">
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="firstName13">Cantidad final </label>
+                                <input type="text" [(ngModel)]="producto_historial.stock_final_producto"
+                                    #cantidad_final="ngModel" name="cantidad_final" placeholder="Cantidad"
+                                    class="form-control " readonly
+                                    [ngClass]="{'is-valid': cantidad_final.valid ,'is-invalid': (!cantidad_final.valid && validarStock) || producto_historial.stock_final_producto<0  }"
+                                    [required]="true">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="firstName13">Precio Costo Anterior</label>
+                                <input type="text" [(ngModel)]="producto.preciocosto_producto"
+                                    #precio_anterior="ngModel" name="precio_anterior" class="form-control " readonly
+                                    [required]="false">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="firstName13">Precio Costo Actual</label>
+                                <input type="number" [(ngModel)]="producto_historial.preciocosto_producto"
+                                    #precio_actual="ngModel" name="precio_actual" placeholder="Nuevo Costo del Producto"
+                                    class="form-control" [required]="false">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h6 for="name" class="control-label">Comentario</h6>
+                                <div>
+                                    <textarea class="form-control" #comentario_historial="ngModel"
+                                        name="comentario_historial"
+                                        [(ngModel)]="producto_historial.comentario_producto_historial" rows="3"
+                                        [required]="false"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title=""
+                        title="">Salir</button>
+                    <button class="btn btn-primary" type="submit" data-original-title="" title="">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN MODAL ASOCIAR Gestionar Cantidad -->
+
+<!-- -MODAL Gestionar Cantidad -->
+<div class="modal fade" id="historial-producto" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog    modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center">Historial de producto</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title=""
+                    title=""><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mt-3">
+                        <div class="top-nav-search">
+                            <input type="text" class="form-control" placeholder="Buscar historial"
+                                [(ngModel)]="filtrarTabla3">
+                            <button type="button" class="btn"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="row mt-3">
+                            <div class="col-md-3 mt-2">
+                                <label>Mostrar:</label>
+                            </div>
+                            <div class="col-md-4 mt-1">
+                                <select class="custom-select custom-select-sm" (change)="cambio3($event.target.value)">
+                                    <option value="5" selected>5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive-lg">
+                    <table class="table">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #f2f2f2; height: 35px;">
+                                <th class="text-center">Acción</th>
+                                <th class="text-center">Fecha</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-center">Responsable</th>
+                                <th class="text-center">Comentario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container
+                                *ngFor="let item of historialProducto | historialproducto : filtrarTabla3 | paginate 
+                                : { id:'pagination3', itemsPerPage: this.numrows3, currentPage: pageActual3 }; let i = index ">
+                                <tr>
+                                    <td class="text-center">{{item.tipo_movimiento}}</td>
+                                    <td class="text-center">{{item.fecha_producto_historial }}</td>
+                                    <td class="text-center">{{item.cantidadmovimiento_producto_historial}}</td>
+                                    <td class="text-center">{{item.nombre_usuario}} {{item.apellido_usuario}}</td>
+                                    <td class="text-center">{{item.comentario_producto_historial}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <pagination-controls id='pagination3' (pageChange)="pageActual3 = $event" previousLabel="Anterior"
+                        nextLabel="Siguiente" responsive="true">
+                    </pagination-controls>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title=""
+                    title="">Volver</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- FIN MODAL ASOCIAR Gestionar Cantidad -->

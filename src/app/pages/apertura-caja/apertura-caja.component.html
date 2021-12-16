@@ -1,0 +1,405 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="card-header">
+                <h4 class="card-title">Apertura de Caja</h4>
+                <p class="card-text">
+                    Se muestra la apertura de caja del dia.
+                </p>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-tabs-solid">
+                        <li class="nav-item"><a class="nav-link active" href="#solid-justified-tab1"
+                                data-toggle="tab">Activados</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="solid-justified-tab1">
+                            <div class="card">
+                                <div class="row m-0">
+                                    <div class="col-md-12 col-12">
+                                        <div class="row mt-3">
+                                            <div class="col-md-4 col-12">
+                                                <label class="h6" class="p-0 m-0">Fecha Inicio</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" id="btnGroupAddon"><i
+                                                                class="fa fa-calendar" aria-hidden="true"></i></div>
+                                                    </div>
+                                                    <input type="date" class=" form-control " #fecha_inicio="ngModel"
+                                                        [(ngModel)]="filtro_venta.fecha_inicio" name="fecha_inicio"
+                                                        placeholder="Fecha Inicio" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-12">
+                                                <label class="h6" class="p-0 m-0">Fecha Fin</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text" id="btnGroupAddon">
+                                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="date" class=" form-control " #fecha_fin="ngModel"
+                                                        [(ngModel)]="filtro_venta.fecha_fin" name="fecha_fin"
+                                                        placeholder="Fecha Fin" />
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-4 col-12 d-flex justify-content-start align-items-end">
+                                                <button class="btn btn-outline-success" (click)="BuscarFechaCierre()"><i
+                                                        class="fa fa-search-plus mr-2"></i>Buscar</button>
+                                                 <button class="btn btn-outline-info ml-2" routerLink="/Caja"><i
+                                                            class="fa fa-reply-all "></i>Volver</button>
+                                            </div>
+
+                                        </div>
+                                        <div class="row filtrar-content">
+                                            <div class="col-md-4 mt-3">
+                                                <div class="top-nav-search">
+                                                    <input type="text" class="form-control" placeholder="Buscar Caja"
+                                                        [(ngModel)]="filtrarTabla">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-12">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-3 mt-2">
+                                                        <label>Mostrar:</label>
+                                                    </div>
+                                                    <div class="col-md-4 mt-1">
+                                                        <select class="custom-select custom-select-sm"
+                                                            (change)="cambio($event.target.value)">
+                                                            <option value="5" selected>5</option>
+                                                            <option value="10">10</option>
+                                                            <option value="15">15</option>
+                                                            <option value="20">20</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-4 col-12  mt-3" style="text-align: end;">
+                                                <button type="button" (click)="AgregarCaja()"
+                                                    class="agrandar btn btn-sm btn-outline-success active">
+                                                    Agregar Apertura Caja <i class="fe fe-plus"></i></button>
+                                            </div>
+                                        </div>
+                                     
+                                    </div>
+                                  
+                                </div>
+
+                                <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando">
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h5 class="display-4 text-primary">Cargando...</h5>
+                                    <div class="loader loader--style1" title="0">
+                                        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
+                                            height="100px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+                                            xml:space="preserve">
+                                            <path opacity="0.2" fill="#000"
+                                                d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                            <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                                <animateTransform attributeType="xml" attributeName="transform"
+                                                    type="rotate" from="0 20 20" to="360 20 20" dur="0.5s"
+                                                    repeatCount="indefinite" />
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="card-body" *ngIf="!cargando">
+                                    <div class="table-responsive">
+                                        <table class="datatable table table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>FECHA APERTURA</th>
+                                                    <th>FECHA CIERRA</th>
+                                                    <th>MONTO INICIAL</th>
+                                                    <th class="text-center">MONTO FINAL</th>
+                                                    <th class="text-center">TOTAL VENTAS</th>
+                                                    <th class="text-center">ACCION</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container
+                                                    *ngFor="let item of listarapertura  | aperturacaja : filtrarTabla | paginate 
+                                                : { id:'pagination1', itemsPerPage: this.numrows, currentPage: pageActual }; let i = index ">
+                                                    <tr>
+                                                        <td>{{item.apertura_caja_fechainicio}}</td>
+                                                        <td>{{item.apertura_caja_fechafin}}</td>
+                                                        <td>S/{{item.apertura_caja_monto_inicial}}</td>
+                                                        <td class="text-center">
+                                                            S/{{item.apertura_caja_monto_final}}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            S/{{item.apertura_caja_total_ventas}}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <ng-container
+                                                                *ngIf="item.apertura_caja_estado!=1; else elseTemplate">
+                                                                <button
+                                                                    (click)="ReporteCajaFinalizado(item.id_apertura_caja)"
+                                                                    data-toggle="modal" tooltip="Visualizar Caja"
+                                                                    placement="top" show-delay="200"
+                                                                    class="agrandar btn btn-sm bg-success-light">
+                                                                    <i class="fe fe-eye"></i>
+                                                                </button>
+                                                            </ng-container>
+                                                            <ng-template #elseTemplate>
+                                                                <button (click)="CerrarCaja(item.id_apertura_caja)"
+                                                                    data-toggle="modal" tooltip="Cerrar Caja"
+                                                                    placement="top" show-delay="200"
+                                                                    class="agrandar btn btn-sm bg-danger-light">
+                                                                    <i class="fe fe-close"></i>
+                                                                </button>
+                                                            </ng-template>
+
+
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                        <pagination-controls id="pagination1" class="my-pagination"
+                                            (pageChange)="pageActual = $event" previousLabel="Anterior"
+                                            nextLabel="Siguiente" responsive="true"></pagination-controls>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+
+<!-- /Main Wrapper -->
+
+
+<div class="modal fade" id="modal_marca" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal_marca" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form #registraApertura="ngForm" (ngSubmit)="EnviarDatosCaja(registraApertura)">
+                <div class="modal-header">
+                    <h5 class="modal-title">Aperturar Caja</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title=""
+                        title=""><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Numero de Caja</label>
+                                <input type="number" readonly class="glosa_caja form-control numero_caja"
+                                    name="numero_caja" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Monto Inicial</label>
+                                <input type="number" class="monto_aperturar form-control" #monto_aperturar="ngModel"
+                                    [(ngModel)]="apertura_caja.apertura_caja_monto_inicial"
+                                    [ngClass]="{'is-valid': monto_aperturar.valid,'is-invalid': !monto_aperturar.valid && validar}"
+                                    name="monto_aperturar" placeholder="Ingrese el monto" [required]="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Fecha Inicial</label>
+                                <input type="text" readonly class="glosa_caja form-control" #fecha_aperturar="ngModel"
+                                    [(ngModel)]="apertura_caja.apertura_caja_fechainicio"
+                                    [ngClass]="{'is-valid': fecha_aperturar.valid,'is-invalid': !fecha_aperturar.valid && validar}"
+                                    name="fecha_aperturar" [required]="true" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Hora</label>
+                                <input type="text" readonly class="hora_apertura form-control" value=""
+                                    name="hora_apertura" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title=""
+                        title="">Salir</button>
+                    <button class="btn btn-primary" type="submit" data-original-title="" title="">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="cerrar_apertura_caja" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="cerrar_apertura_caja"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form #cerrarApertura="ngForm" (ngSubmit)="CerrarDatosCaja(cerrarApertura)">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cerrar Apertura Caja</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title=""
+                        title=""><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Numero de Caja</label>
+                                <input type="number" readonly class=" form-control numero_caja" type="number"
+                                    name="numero_caja" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Monto Inicial</label>
+                                <input type="text" readonly class="monto_aperturar form-control "
+                                    #monto_aperturar="ngModel" [(ngModel)]="apertura_caja.apertura_caja_monto_inicial"
+                                    name="monto_aperturar" placeholder="Ingrese el monto" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Fecha Inicial</label>
+                                <input type="date" readonly class="fecha_inicial form-control" value="" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Hora Inicio</label>
+                                <input type="text" readonly class="hora_inicio form-control" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Fecha Fin</label>
+                                <input type="text" readonly class="Fecha_Fin form-control"
+                                    [(ngModel)]="apertura_caja.apertura_caja_fechafin" #fecha_fin="ngModel"
+                                    name="fecha_fin" value="" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Hora Fin</label>
+                                <input type="text" readonly class="hora_fin form-control" value="" name="hora_inicio" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Monto de Ventas Totales</label>
+                                <input type="text" readonly class="total_ventas form-control" value=""
+                                    name="monto_venta" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Monto Final</label>
+                                <input type="number" #monto_final="ngModel" class="form-control" name="monto_final"
+                                    [ngClass]="{'is-valid': monto_final.valid,'is-invalid': !monto_final.valid && validarCajaCerrado}"
+                                    [(ngModel)]="apertura_caja.apertura_caja_monto_final" [required]="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Cantidad de Ventas Totales</label>
+                                <input type="number" readonly class=" form-control" #cantidad_ventas="ngModel"
+                                    [(ngModel)]="apertura_caja.apertura_caja_cantidad_ventas" name="cantidad_ventas"
+                                    required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Descuento de Ventas Totales</label>
+                                <input type="text" readonly class=" form-control descuento_ventas" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title=""
+                        title="">Salir</button>
+                    <button class="btn btn-primary" type="submit" data-original-title="" title="">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="reporte_caja_finalizado" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="reporte_caja_finalizado" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl " style="width:55%;" role="document">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">REPORTE DEL CIERRE DE CAJA</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs nav-tabs-solid">
+                            <li class="nav-item"><a class="nav-link active reporte_venta_tab"
+                                    href="#solid-justified-tab3" data-toggle="tab">REPORTE VENTA</a></li>
+                            <li class="nav-item"><a class="nav-link reporte_caja_tab " (click)="caja_cerrado()"
+                                    href="#solid-justified-tab2" data-toggle="tab">REPORTE CAJA</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="solid-justified-tab3">
+                                <div class="col-md-12 p-0 venta_cerrado">
+
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="solid-justified-tab2">
+                                <div class="col-md-12 p-0 caja_cerrado">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="cerrarModal()" type="button" data-dismiss="modal"
+                    data-original-title="" title="">Salir</button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

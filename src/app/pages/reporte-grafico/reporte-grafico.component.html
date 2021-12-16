@@ -1,0 +1,67 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid" style="padding: 0px;">
+        <div class="container-fluid mt--7">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-12 col-12">
+                        <div class="card">
+                            <div class="card-header text-center  font-weight-bolder h2 ">GRAFICO DE VENTAS DURANTE EL MES</div>
+                            <div class="card-body">
+                                <div class="row">
+                                 
+                                    <div class="col-md-4 col-12">
+                                        <label class="h6" class="p-0 m-0">Fecha Inicio</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text" id="btnGroupAddon"><i class="fa fa-calendar"
+                                                        aria-hidden="true"></i></div>
+                                            </div>
+                                            <input type="date" class=" form-control " #fecha_inicio="ngModel"
+                                            [(ngModel)]="filtro_venta.fecha_inicio" name="fecha_inicio"
+                                            placeholder="Fecha Inicio" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12">
+                                        <label class="h6" class="p-0 m-0">Fecha Fin</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text" id="btnGroupAddon">
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i></div>
+                                            </div>
+                                            <input type="date" class=" form-control " #fecha_fin="ngModel"
+                                            [(ngModel)]="filtro_venta.fecha_fin" name="fecha_fin"
+                                            placeholder="Fecha Fin" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-12 d-flex justify-content-start align-items-end">
+                                        <button class="btn btn-outline-success"
+                                            (click)="MostrandoGrafica()"><i class="fa fa-search-plus mr-2"></i>Buscar</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                      <div style="display: block">
+                                        <canvas baseChart
+                                          [datasets]="barChartData"
+                                          [labels]="barChartLabels"
+                                          [options]="barChartOptions"
+                                          [legend]="barChartLegend"
+                                          [chartType]="barChartType">
+                                        </canvas>
+                                      </div>
+                                      
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                      
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- /Page Wrapper -->

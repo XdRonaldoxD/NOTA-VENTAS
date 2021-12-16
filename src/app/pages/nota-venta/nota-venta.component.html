@@ -1,0 +1,290 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="card-header">
+                <h4 class="card-title">Nota Venta</h4>
+                <p class="card-text">
+                    Se Genera la Nota de venta para el cliente.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-12 d-none">
+            <form class="example-form " *ngIf="input">
+                <mat-form-field class="example-full-width">
+                    <input #stateInput class="form-control" (keyup)="0" matInput
+                        placeholder="Buscar el nombre del Producto" aria-label="State" [matAutocomplete]="auto"
+                        [formControl]="stateCtrl">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option (onSelectionChange)="stateInput.value !=undefined && onEnter($event)"
+                            class="mat-option" *ngFor="let state of filteredStates | async" [value]="state.name">
+                            <!-- <img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="50" />  -->
+                            <span class="ml-1">{{ state.name }}</span>
+                            <strong class="text-success"> | </strong>
+                            <span>INVETARIO: {{state.glosa_tipo_inventario}}</span>
+                            <strong class="text-success"> | </strong>
+                            <span>PRECIO: S/.{{state.precioventa_producto}}</span>
+                            <strong class="text-success"> | </strong>
+                            <span>CANTIDAD: {{state.stock_producto}}</span>
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </form>
+        </div>
+
+
+        <!-- /Page Header -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body ">
+                    <div class="col-md-12 col-12 text-center mt-3 row justify-content-end">
+                        <button type="button" (click)="SeleccionarProducto()"
+                            class="btn btn-sm btn-outline-success active">
+                            Seleccionar Producto <i class="fe fe-plus"></i></button>
+                    </div>
+
+                </div>
+
+
+                <!-- /Main Wrapper -->
+                <div class="table-responsive" *ngIf="construccionTabla.length>0">
+                    <table class="datatable table table-stripped">
+                        <thead>
+                            <tr>
+                                <th class="text-center " style="width: 10%;">INVENTARIO</th>
+                                <th class="text-center" style="width: 10%;">MARCA</th>
+                                <th class="text-center" style="width: 12%;">PRODUCTO</th>
+                                <th class="text-center" style="width: 10%;">SOTCK</th>
+                                <th class="text-center" style="width: 10%;">PRECIO</th>
+                                <th class="text-center" style="width: 10%;">CANTIDAD</th>
+                                <th class="text-center" style="width: 10%;">TOTAL</th>
+                                <th class="text-center" style="width: 10%;">ACCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let item of construccionTabla">
+                                <tr>
+                                    <td style="vertical-align:middle;" class="text-center"> {{item[1]}}</td>
+                                    <td style="vertical-align:middle;" class="text-center">{{item[2]}}</td>
+                                    <td style="vertical-align:middle;" class="text-center">{{item[3]}} </td>
+                                    <td style="vertical-align:middle;" class="text-center">{{item[4]}}</td>
+                                    <td style="vertical-align:middle;" class="text-center">{{item[5]}}</td>
+                                    <td style="vertical-align:middle;" class="text-center ">
+                                        <input type="number" class="form-control {{item[0]}}" [value]="item[6]"
+                                            (keyup)="inputChangeSeleccionado($event.target,$event.target.value,item[0])">
+                                    </td>
+                                    <td style="vertical-align:middle;" class="text-center">{{item[7]}}</td>
+                                    <td style="vertical-align:middle;" class="text-center">
+                                        <button (click)="eliminarProducto(item[0])"
+                                            class="agrandar btn btn-sm bg-danger-light" data-toggle="modal"
+                                            tooltip="Eliminar" placement="top" show-delay="200"><i
+                                                class="fe fe-close"></i> </button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+                <div class="col-md-12 col-12 text-center mt-3 row justify-content-end mostrarCalculoVenta d-none">
+                    <div class="col-md-12 row justify-content-end align-items-center">
+                        <div class="col-md-6 row justify-content-end align-items-center">
+                            <label for=""> <strong> Cantidad de producto: </strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <b class="cantidad_producto"></b>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 row justify-content-end align-items-center">
+                        <div class="col-md-6 row justify-content-end align-items-center">
+                            <label for=""> <strong> Total a Pagar:</strong> </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control total_pagar" value="" readonly>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 row justify-content-end align-items-center">
+                        <div class="col-md-6 row justify-content-end align-items-center">
+                            <label for=""> <strong>Descuento:</strong> </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control descuento" value=""
+                                (keyup)="Descuento($event.target.value)" min="1" pattern="^[0-9]+">
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 row justify-content-end align-items-center">
+                        <div class="col-md-6 row justify-content-end align-items-center">
+                            <label for=""> <strong>Su Pago: </strong></label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control pago" #pago
+                                (keyup)="CalcularPagoCambio($event.target.value)" min="1" pattern="^[0-9]+">
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 row justify-content-end align-items-center">
+                        <div class="col-md-6 row justify-content-end align-items-center">
+                            <label for=""> <strong>Su Cambio: </strong> </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control cambio" value="" readonly>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body ">
+                        <div class="col-md-12 col-12 text-center mt-3 row justify-content-end">
+                            <button type="button" (click)="NotaVenta()"
+                                class="btn btn-sm btn-outline-success active generar_venta">
+                                Generar Nota Venta </button>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modal_marca" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="modal_marca" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Producto</h5>
+                <button class="close" type="button" (click)="salirModal()"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando">
+                        <br>
+                        <br>
+                        <br>
+                        <h5 class="display-4 text-primary">Cargando...</h5>
+                        <div class="loader loader--style1" title="0">
+                            <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+                                viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+                                <path opacity="0.2" fill="#000"
+                                    d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                        s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                        c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                        C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                    <animateTransform attributeType="xml" attributeName="transform" type="rotate"
+                                        from="0 20 20" to="360 20 20" dur="0.5s" repeatCount="indefinite" />
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="card-body" *ngIf="!cargando">
+                        <div class="table-responsive">
+                            <table datatable [dtOptions]="dtOptions[0]" class="row-border hover " width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 10%;">TIPO INVENTARIO</th>
+                                        <th class="text-center" style="width: 12%;">MARCA</th>
+                                        <th class="text-center" style="width: 16%;">PRODUCTO </th>
+                                        <th class="text-center" style="width: 6%;">STOCK </th>
+                                        <th class="text-center" style="width: 12%;">PRECIO VENTA </th>
+                                        <th class="text-center" style="width: 8%;">CANTIDAD </th>
+                                        <th class="text-center" style="width: 6%;">TOTAL </th>
+                                        <th class="text-center" style="width: 7%;">ACCIÓN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let item of listaProducto">
+                                        <tr>
+                                            <td style="vertical-align:middle;" class="text-center">
+                                                {{item.glosa_tipo_inventario}}</td>
+                                            <td style="vertical-align:middle;" class="text-center">
+                                                {{item.glosa_marca}}</td>
+                                            <!-- <td style="vertical-align:middle;">{{item.codigo_producto}}</td> -->
+                                            <td style="vertical-align:middle;" class="text-center">
+                                                {{item.glosa_producto}}</td>
+                                            <td style="vertical-align:middle;" class="text-center">
+                                                <b> {{item.stock_producto}}</b>
+                                            </td>
+                                            <td style="vertical-align:middle;text-align: center;">
+                                                <b>S/{{item.precioventa_producto}}</b>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" name="cantidadEscogido[]"
+                                                    (keyup)="inputChange($event.target)" class="form-control">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <b>0</b>
+                                            </td>
+                                            <td class="text-center" style="vertical-align:middle;">
+                                                <input placement="left" ngbTooltip="Agregar"
+                                                    (change)="GuardaDatosProducto(item.id_producto,$event.target,$event)"
+                                                    type="checkbox" name="asignar_producto"
+                                                    class="asignar_producto form-check-input">
+
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button class="btn btn-success" type="button" (click)="GuardaDatosProductoVenta()">Guardar</button> -->
+                <button class="btn btn-secondary" type="button" (click)="salirModal()">Volver</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- MOSTRAR RECETA REPORTE -->
+<div class="modal fade" id="mostrar_receta_reporte" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="boxModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style=" background: #fbfbfb; ">
+            <div class="modal-header">
+                <h4 class="modal-title text-align-center">Mostrando Ticket</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12" id="viewjs">
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-end">
+                <div class="row">
+                    <div id="button_right" class="col-md-12 d-flex justify-content-between p-0"
+                        style="flex-wrap: wrap;">
+                        <button type="button" data-dismiss="modal" class="btn btn-outline-secondary mr-1"><i
+                                style="vertical-align: text-bottom;" class="bx bx-left-arrow-alt"></i> Volver</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

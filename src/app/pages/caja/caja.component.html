@@ -1,0 +1,173 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="card-header">
+                <h4 class="card-title">Caja</h4>
+                    <p class="card-text">
+                        Se muestra el listado de todas las cajas.
+                    </p>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-tabs-solid">
+                        <li class="nav-item"><a class="nav-link active" href="#solid-justified-tab1" data-toggle="tab">Activados</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="solid-justified-tab1">
+                            <div class="card">
+                                <div class="row m-0">
+                                    <div class="col-md-6 filtrar-content">
+                                        <div class="row">
+                                            <div class="col-md-6 mt-3">
+                                                <div class="top-nav-search">
+                                                        <input type="text" class="form-control" placeholder="Buscar Caja"
+                                                         [(ngModel)]="filtrarTabla" (keyup)="busqueda(filtrarTabla)">
+                                                        
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="row mt-3">
+                                                    <div class="col-md-3 mt-2">
+                                                        <label>Mostrar:</label>
+                                                    </div>
+                                                    <div class="col-md-4 mt-1">
+                                                        <select class="custom-select custom-select-sm"
+                                                        (change)="cambio($event.target.value)">
+                                                        <option value="5" selected>5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12  mt-3" style="text-align: end;">
+                                            <button type="button" (click)="AgregarCaja()" class="agrandar btn btn-sm btn-outline-success active">
+                                                 Agregar Caja   <i class="fe fe-plus"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-5 animated fadeIn" align="center" *ngIf="cargando" >
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h5 class="display-4 text-primary">Cargando...</h5>
+                                    <div class="loader loader--style1" title="0">
+                                      <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        x="0px" y="0px" width="100px" height="100px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+                                        xml:space="preserve">
+                                        <path opacity="0.2" fill="#000"
+                                          d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
+                                        <path fill="#dc3545" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                                          <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20"
+                                            dur="0.5s" repeatCount="indefinite" />
+                                        </path>
+                                      </svg>
+                                    </div>
+                                  </div>
+
+                                <div class="card-body" *ngIf="!cargando">
+                                    <div class="table-responsive">
+                                        <table class="datatable table table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>N° DE CAJA</th>
+                                                    <th>NOMBRE</th>
+                                                    <th class="text-center">APERTURA</th>
+                                                    <th class="text-center">ACCIÓNES</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container  *ngFor="let item of listarCajas  | caja : filtrarTabla | paginate 
+                                                : { id:'pagination1', itemsPerPage: this.numrows, currentPage: pageActual }; let i = index "  >
+                                                    <tr >
+                                                        <td>{{item.numero_caja}}</td>
+                                                        <td>{{item.glosa_caja}}</td>
+                                                        <td class="text-center">
+                                                            <button (click)="AperturaCaja(item.id_caja)"
+                                                            class="agrandar btn btn-sm bg-success-light"
+                                                            data-toggle="modal" tooltip="Aperturar Caja"
+                                                            placement="top" show-delay="200">
+                                                            <i class="fe fe-document"></i>
+                                                        </button>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="actions">
+                                                                <button (click)="EditarMarca(item.id_caja)" class="agrandar btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                                    <i class="fe fe-pencil"></i> Editar
+                                                                </button>
+                                                                &nbsp;&nbsp;
+                                                                <button (click)="EliminarCaja(item.id_caja,item.glosa_caja)" data-toggle="modal" href="#delete_modal" class="agrandar btn btn-sm bg-danger-light">
+                                                                    <i class="fe fe-close"></i> Eliminar
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                        <pagination-controls id="pagination1" class="my-pagination" (pageChange)="pageActual = $event"
+                                            previousLabel="Anterior" nextLabel="Siguiente"  responsive="true"></pagination-controls>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+     
+
+
+    </div>
+</div>
+
+
+<!-- /Main Wrapper -->
+
+
+<div class="modal fade" data-backdrop="static" id="modal_marca" tabindex="-1" role="dialog" aria-labelledby="modal_marca" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+       
+      <div class="modal-content">
+        <form #registraMarca="ngForm" (ngSubmit)="EnviarDatosCaja(registraMarca)">
+            <div class="modal-header">
+              <h5 class="modal-title">Nueva Caja</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="">Caja</label>
+                            <input type="text" class="glosa_caja form-control" #glosa_caja="ngModel" [(ngModel)]="caja.glosa_caja"
+                            [ngClass]="{'is-valid': glosa_caja.valid,'is-invalid': !glosa_caja.valid && validar}"
+                            type="text" name="glosa_caja"
+                            placeholder="Nombre de la Caja" required
+                            />
+                        </div>
+                    </div> 
+                  </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" (click)="cerrarModal()" type="button" data-dismiss="modal" data-original-title="" title="">Salir</button>
+              <button class="btn btn-primary"   type="submit" data-original-title="" title="">Guardar</button>
+            </div>
+        </form>
+      </div>
+ 
+    </div>
+</div>
